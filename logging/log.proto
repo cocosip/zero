@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package zero.logging;
+
+option cc_enable_arenas = true;
+option go_package = "zero/logging";
+
+message LogOption {
+  string level = 1;
+  repeated string filter_keys = 2;
+}
