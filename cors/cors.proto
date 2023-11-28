@@ -3,7 +3,7 @@ syntax = "proto3";
 package zero.cors;
 
 option cc_enable_arenas = true;
-option go_package = "zero/cors";
+option go_package = "github.com/cocosip/zero/cors";
 
 message CorsOption {
   repeated string origins = 1;

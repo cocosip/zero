@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package zero.registry;
+
+option cc_enable_arenas = true;
+option go_package = "github.com/cocosip/zero/registry";
+
+message RegistryOption {
+  string provider = 1;
+}
+

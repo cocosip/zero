@@ -3,7 +3,7 @@ syntax = "proto3";
 package zero.logging;
 
 option cc_enable_arenas = true;
-option go_package = "zero/logging";
+option go_package = "github.com/cocosip/zero/logging";
 
 message LogOption {
   string level = 1;
