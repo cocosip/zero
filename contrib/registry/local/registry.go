@@ -2,6 +2,7 @@ package local
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-kratos/kratos/v2/registry"
 	"slices"
 	"strings"
@@ -43,7 +44,8 @@ func New(entries ...*ServiceEntry) *Registry {
 	}
 
 	for _, entry := range entries {
-		r.entries[entry.Name] = entry
+		key := normalizeName(entry.Name)
+		r.entries[key] = entry
 	}
 	return r
 }
@@ -51,7 +53,8 @@ func New(entries ...*ServiceEntry) *Registry {
 func (r *Registry) Register(_ context.Context, service *registry.ServiceInstance) error {
 	r.m.Lock()
 	defer r.m.Unlock()
-	if entry, ok := r.entries[service.Name]; ok {
+	key := normalizeName(service.Name)
+	if entry, ok := r.entries[key]; ok {
 		for _, endpoint := range service.Endpoints {
 			if !slices.Contains(entry.Endpoints, endpoint) {
 				entry.Endpoints = append(entry.Endpoints, endpoint)
@@ -61,16 +64,17 @@ func (r *Registry) Register(_ context.Context, service *registry.ServiceInstance
 	}
 
 	entry := NewServiceEntry(service.ID, service.Name, service.Version, service.Endpoints...)
-	r.entries[entry.Name] = entry
+	r.entries[key] = entry
 	return nil
 }
 
 func (r *Registry) Deregister(_ context.Context, service *registry.ServiceInstance) error {
 	r.m.Lock()
 	defer r.m.Unlock()
-	if entry, ok := r.entries[service.Name]; ok {
+	key := normalizeName(service.Name)
+	if entry, ok := r.entries[key]; ok {
 		if entry.Name == service.Name && entry.ID == service.ID {
-			delete(r.entries, service.Name)
+			delete(r.entries, key)
 		}
 	}
 	return nil
@@ -80,7 +84,8 @@ func (r *Registry) GetService(_ context.Context, name string) ([]*registry.Servi
 	r.m.Lock()
 	defer r.m.Unlock()
 	items := make([]*registry.ServiceInstance, 0)
-	if entry, ok := r.entries[name]; ok {
+	key := normalizeName(name)
+	if entry, ok := r.entries[key]; ok {
 		item := &registry.ServiceInstance{
 			ID:        entry.ID,
 			Name:      entry.Name,
@@ -95,4 +100,11 @@ func (r *Registry) GetService(_ context.Context, name string) ([]*registry.Servi
 
 func (r *Registry) Watch(_ context.Context, name string) (registry.Watcher, error) {
 	return newWatcher(name)
+}
+
+func normalizeName(name string) string {
+	if strings.HasPrefix(name, "discovery:///") {
+		return strings.TrimSpace(name)
+	}
+	return fmt.Sprintf("discovery:///%s", strings.TrimSpace(name))
 }

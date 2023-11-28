@@ -6,6 +6,24 @@ option cc_enable_arenas = true;
 option go_package = "github.com/cocosip/zero/registry";
 
 message RegistryOption {
+  message LocalOption {
+    message Entry {
+      string id = 1;
+      string name = 2;
+      string version = 3;
+      repeated string endpoints = 4;
+    }
+    repeated Entry entries = 1;
+  }
+  
+  message EtcdOption {
+    string username = 1;
+    string password = 2;
+    repeated string endpoints = 3;
+  }
+
   string provider = 1;
+  LocalOption local = 2;
+  EtcdOption etcd = 3;
 }
 
