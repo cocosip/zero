@@ -32,20 +32,33 @@ func NewLogger(w io.Writer, id string, name string, traceId interface{}, version
 	return logger
 }
 
-func NewGormLogger(w io.Writer, logOpt *LogOption, opts ...func(*glog.Config)) glog.Interface {
+type GormLoggerOption func(o *glog.Config)
+
+func WithGormSlowThreshold(duration time.Duration) GormLoggerOption {
+	return func(o *glog.Config) {
+		o.SlowThreshold = duration
+	}
+}
+
+func WithGormLogLevel(level glog.LogLevel) GormLoggerOption {
+	return func(o *glog.Config) {
+		o.LogLevel = level
+	}
+}
+
+func NewGormLogger(w io.Writer, logOpt *LogOption, opts ...GormLoggerOption) glog.Interface {
 	level := getGormLogLevel(logOpt.GetLevel())
-	c := &glog.Config{
+	c := glog.Config{
 		SlowThreshold:             1000 * time.Millisecond,
 		Colorful:                  true,
 		IgnoreRecordNotFoundError: true,
 		LogLevel:                  level,
 		ParameterizedQueries:      true,
 	}
-	for _, fn := range opts {
-		fn(c)
+	for _, o := range opts {
+		o(&c)
 	}
-
-	return glog.New(stdlog.New(w, "", 0), *c)
+	return glog.New(stdlog.New(w, "", 0), c)
 }
 
 func getGormLogLevel(s string) glog.LogLevel {

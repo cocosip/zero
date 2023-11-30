@@ -34,17 +34,19 @@ func NewServiceEntry(id, name, version string, endpoints ...string) *ServiceEntr
 }
 
 type Registry struct {
-	entries map[string]*ServiceEntry
-	m       *sync.Mutex
+	authority string
+	entries   map[string]*ServiceEntry
+	m         *sync.Mutex
 }
 
-func New(entries ...*ServiceEntry) *Registry {
+func New(authority string, entries ...*ServiceEntry) *Registry {
 	r := &Registry{
-		m: &sync.Mutex{},
+		authority: authority,
+		m:         &sync.Mutex{},
 	}
 
 	for _, entry := range entries {
-		key := normalizeName(entry.Name)
+		key := normalizeName(r.authority, entry.Name)
 		r.entries[key] = entry
 	}
 	return r
@@ -53,7 +55,7 @@ func New(entries ...*ServiceEntry) *Registry {
 func (r *Registry) Register(_ context.Context, service *registry.ServiceInstance) error {
 	r.m.Lock()
 	defer r.m.Unlock()
-	key := normalizeName(service.Name)
+	key := normalizeName(r.authority, service.Name)
 	if entry, ok := r.entries[key]; ok {
 		for _, endpoint := range service.Endpoints {
 			if !slices.Contains(entry.Endpoints, endpoint) {
@@ -71,7 +73,7 @@ func (r *Registry) Register(_ context.Context, service *registry.ServiceInstance
 func (r *Registry) Deregister(_ context.Context, service *registry.ServiceInstance) error {
 	r.m.Lock()
 	defer r.m.Unlock()
-	key := normalizeName(service.Name)
+	key := normalizeName(r.authority, service.Name)
 	if entry, ok := r.entries[key]; ok {
 		if entry.Name == service.Name && entry.ID == service.ID {
 			delete(r.entries, key)
@@ -84,7 +86,7 @@ func (r *Registry) GetService(_ context.Context, name string) ([]*registry.Servi
 	r.m.Lock()
 	defer r.m.Unlock()
 	items := make([]*registry.ServiceInstance, 0)
-	key := normalizeName(name)
+	key := normalizeName(r.authority, name)
 	if entry, ok := r.entries[key]; ok {
 		item := &registry.ServiceInstance{
 			ID:        entry.ID,
@@ -102,9 +104,9 @@ func (r *Registry) Watch(_ context.Context, name string) (registry.Watcher, erro
 	return newWatcher(name)
 }
 
-func normalizeName(name string) string {
-	if strings.HasPrefix(name, "discovery:///") {
+func normalizeName(authority, name string) string {
+	if strings.HasPrefix(name, "discovery://") {
 		return strings.TrimSpace(name)
 	}
-	return fmt.Sprintf("discovery:///%s", strings.TrimSpace(name))
+	return fmt.Sprintf("discovery://%s/%s", authority, strings.TrimSpace(name))
 }
