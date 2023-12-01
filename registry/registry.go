@@ -2,12 +2,12 @@ package registry
 
 import (
 	"fmt"
+	"github.com/cocosip/zero/contrib/registry/local"
 	"github.com/go-kratos/kratos/contrib/registry/etcd/v2"
 	"github.com/go-kratos/kratos/v2/registry"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"strings"
 	"sync"
-	"zero/contrib/registry/local"
 )
 
 type DiscoveryRegistrar interface {
@@ -71,7 +71,7 @@ func (f *factory) getRegistry() (DiscoveryRegistrar, error) {
 			}
 			entries = append(entries, entry)
 		}
-		f.reg = local.New(entries...)
+		f.reg = local.New(f.opt.GetAuthority(), entries...)
 	case "etcd":
 		client, err := clientv3.New(clientv3.Config{
 			Endpoints: f.opt.Etcd.GetEndpoints(),

@@ -15,7 +15,7 @@ message RegistryOption {
     }
     repeated Entry entries = 1;
   }
-  
+
   message EtcdOption {
     string username = 1;
     string password = 2;
@@ -23,7 +23,8 @@ message RegistryOption {
   }
 
   string provider = 1;
-  LocalOption local = 2;
-  EtcdOption etcd = 3;
+  string authority = 2;
+  LocalOption local = 3;
+  EtcdOption etcd = 4;
 }
 
