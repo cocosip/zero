@@ -1,6 +1,7 @@
 package logging
 
 import (
+	"github.com/cocosip/utils/database"
 	"github.com/go-kratos/kratos/v2/log"
 	glog "gorm.io/gorm/logger"
 	"io"
@@ -18,7 +19,7 @@ func NewLogHelper(logger log.Logger, opt *LogOption) *log.Helper {
 	return helper
 }
 
-func NewLogger(w io.Writer, id string, name string, traceId interface{}, version string, spanId interface{}) log.Logger {
+func NewLogger(w io.Writer, id, name, version string, traceId, spanId interface{}) log.Logger {
 	logger := log.With(
 		log.NewStdLogger(w),
 		"ts", log.DefaultTimestamp,
@@ -32,33 +33,24 @@ func NewLogger(w io.Writer, id string, name string, traceId interface{}, version
 	return logger
 }
 
-type GormLoggerOption func(o *glog.Config)
-
-func WithGormSlowThreshold(duration time.Duration) GormLoggerOption {
-	return func(o *glog.Config) {
-		o.SlowThreshold = duration
-	}
-}
-
-func WithGormLogLevel(level glog.LogLevel) GormLoggerOption {
-	return func(o *glog.Config) {
-		o.LogLevel = level
-	}
-}
-
-func NewGormLogger(w io.Writer, logOpt *LogOption, opts ...GormLoggerOption) glog.Interface {
-	level := getGormLogLevel(logOpt.GetLevel())
-	c := glog.Config{
-		SlowThreshold:             1000 * time.Millisecond,
+func newDefaultConfig() *glog.Config {
+	c := &glog.Config{
+		SlowThreshold:             500 * time.Millisecond,
 		Colorful:                  true,
 		IgnoreRecordNotFoundError: true,
-		LogLevel:                  level,
+		LogLevel:                  glog.Warn,
 		ParameterizedQueries:      true,
 	}
-	for _, o := range opts {
-		o(&c)
+	return c
+}
+
+func NewGormLogger(w io.Writer, logOpt *LogOption, opts ...database.GormLoggerOption) glog.Interface {
+	c := newDefaultConfig()
+	c.LogLevel = getGormLogLevel(logOpt.GetLevel())
+	for _, opt := range opts {
+		opt(c)
 	}
-	return glog.New(stdlog.New(w, "", 0), c)
+	return glog.New(stdlog.New(w, "", 0), *c)
 }
 
 func getGormLogLevel(s string) glog.LogLevel {
