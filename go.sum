@@ -20,8 +20,8 @@ github.com/census-instrumentation/opencensus-proto v0.4.1 h1:iKLQ0xPNFxR/2hzXZMr
 github.com/census-instrumentation/opencensus-proto v0.4.1/go.mod h1:4T9NM4+4Vw91VeyqjLS6ao50K5bOcLKN6Q42XnYaRYw=
 github.com/cncf/xds/go v0.0.0-20230607035331-e9ce68804cb4 h1:/inchEIKaYC1Akx+H+gqO04wryn5h75LSazbRlnya1k=
 github.com/cncf/xds/go v0.0.0-20230607035331-e9ce68804cb4/go.mod h1:eXthEFrGJvWHgFFCl3hGmgk+/aYT6PnTQLykKQRLhEs=
-github.com/cocosip/utils v0.1.2 h1:vNxUxFvZjSOk3pYyNpmSar+Dpqqig5OBoJ6eHeHT7EQ=
-github.com/cocosip/utils v0.1.2/go.mod h1:AVU938aolMEQfp2i9sYhit2b8O77QcgaOscDi0w4FZI=
+github.com/cocosip/utils v0.1.3 h1:x5UbhZ64xEmmq1ZycTNqmcHwnfPa5jKjEfaxkra0Yso=
+github.com/cocosip/utils v0.1.3/go.mod h1:nahy3eRCeUcaLoB7WPgEJj5osWhAleoS+80nEmVkyS8=
 github.com/coreos/go-semver v0.3.1 h1:yi21YpKnrx1gt5R+la8n5WgS0kCrsPp33dmEyHReZr4=
 github.com/coreos/go-semver v0.3.1/go.mod h1:irMmmIw/7yzSRPWryHsK7EYSg09caPQL03VsM8rvUec=
 github.com/coreos/go-systemd/v22 v22.5.0 h1:RrqgGjYQKalulkV8NGVIfkXQf6YYmOyiJKk8iXXhfZs=

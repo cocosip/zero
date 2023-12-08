@@ -1,9 +1,9 @@
 module github.com/cocosip/zero
 
-go 1.21.4
+go 1.21
 
 require (
-	github.com/cocosip/utils v0.1.2
+	github.com/cocosip/utils v0.1.3
 	github.com/go-kratos/kratos/contrib/registry/etcd/v2 v2.0.0-20231127154351-cdb9e99968f7
 	github.com/go-kratos/kratos/v2 v2.7.1
 	github.com/gorilla/handlers v1.5.2
