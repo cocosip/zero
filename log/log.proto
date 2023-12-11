@@ -1,9 +1,9 @@
 syntax = "proto3";
 
-package zero.logging;
+package zero.log;
 
 option cc_enable_arenas = true;
-option go_package = "github.com/cocosip/zero/logging";
+option go_package = "github.com/cocosip/zero/log";
 
 message LogOption {
   string level = 1;

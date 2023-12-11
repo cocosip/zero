@@ -2,7 +2,8 @@ package registry
 
 import (
 	"context"
-	zerologging "github.com/cocosip/zero/logging"
+	log2 "github.com/cocosip/zero/log"
+	zerolog "github.com/cocosip/zero/log"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
@@ -31,10 +32,10 @@ func (f ClientCreateFunc) Create(conn *stdgrpc.ClientConn) (interface{}, error) 
 	return f(conn)
 }
 
-func NewClientFactory(reg FactoryInterface, logger log.Logger, logOpt *zerologging.LogOption) *ClientFactory {
+func NewClientFactory(reg FactoryInterface, logger log.Logger, logOpt *log2.LogOption) *ClientFactory {
 	return &ClientFactory{
 		reg:     reg,
-		log:     zerologging.NewLogHelper(logger, logOpt),
+		log:     zerolog.NewLogHelper(logger, logOpt),
 		_logger: logger,
 	}
 }
