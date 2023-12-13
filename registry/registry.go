@@ -83,5 +83,9 @@ func (f *factory) getRegistry() (DiscoveryRegistrar, error) {
 		}
 		f.reg = etcd.New(client)
 	}
+
+	if f.reg != nil {
+		return f.reg, nil
+	}
 	return nil, fmt.Errorf("invalid registry %s", f.opt.GetProvider())
 }
