@@ -44,10 +44,9 @@ func New(authority string, entries ...*ServiceEntry) *Registry {
 		authority: authority,
 		m:         &sync.Mutex{},
 	}
-
-	for _, entry := range entries {
-		key := normalizeName(r.authority, entry.Name)
-		r.entries[key] = entry
+	for i := range entries {
+		key := normalizeName(r.authority, entries[i].Name)
+		r.entries[key] = entries[i]
 	}
 	return r
 }
