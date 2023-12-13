@@ -42,6 +42,7 @@ type Registry struct {
 func New(authority string, entries ...*ServiceEntry) *Registry {
 	r := &Registry{
 		authority: authority,
+		entries:   map[string]*ServiceEntry{},
 		m:         &sync.Mutex{},
 	}
 	for i := range entries {
