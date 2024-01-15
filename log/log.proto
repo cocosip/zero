@@ -6,6 +6,15 @@ option cc_enable_arenas = true;
 option go_package = "github.com/cocosip/zero/log";
 
 message LogOption {
+  message LogFileOption {
+    int32 max_size = 1;
+    int32 max_age = 2;
+    int32 max_backups = 3;
+    bool local_time = 4;
+    bool compress = 5;
+    bool stdout = 6;
+  }
   string level = 1;
-  repeated string filter_keys = 2;
+  LogFileOption file_option = 2;
+  repeated string filter_keys = 3;
 }

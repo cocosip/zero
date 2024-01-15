@@ -2,6 +2,7 @@ package log
 
 import (
 	"github.com/cocosip/utils/database"
+	ulog "github.com/cocosip/utils/log"
 	"github.com/go-kratos/kratos/v2/log"
 	glog "gorm.io/gorm/logger"
 	"io"
@@ -17,6 +18,18 @@ func NewLogHelper(logger log.Logger, opt *LogOption) *log.Helper {
 			log.FilterKey(opt.GetFilterKeys()...),
 		))
 	return helper
+}
+
+func NewFileLoggerWithOption(filename string, opt *LogOption) io.Writer {
+	return ulog.NewFileLogger(
+		ulog.WithFilename(filename),
+		ulog.WithMaxSize(int(opt.GetFileOption().MaxSize)),
+		ulog.WithMaxAge(int(opt.GetFileOption().GetMaxAge())),
+		ulog.WithMaxBackups(int(opt.GetFileOption().GetMaxBackups())),
+		ulog.WithLocalTime(opt.GetFileOption().GetLocalTime()),
+		ulog.WithCompress(opt.GetFileOption().GetCompress()),
+		ulog.WithStdout(opt.GetFileOption().GetStdout()),
+	)
 }
 
 func NewLogger(w io.Writer, id, name, version string, traceId, spanId interface{}) log.Logger {
