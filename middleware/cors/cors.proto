@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package kratos.middleware.cors;
+
+option go_package = "github.com/cocosip/zero/middleware/cors;cors";
+
+// CorsConfig defines the CORS configuration
+message CorsConfig {
+  // allowed_origins specifies the allowed origins for CORS requests
+  // Use "*" to allow all origins
+  repeated string allowed_origins = 1;
+  
+  // allowed_methods specifies the allowed HTTP methods for CORS requests
+  // Common values: GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH
+  repeated string allowed_methods = 2;
+  
+  // allowed_headers specifies the allowed headers for CORS requests
+  repeated string allowed_headers = 3;
+  
+  // exposed_headers specifies the headers that are exposed to the client
+  repeated string exposed_headers = 4;
+  
+  // allow_credentials indicates whether credentials are allowed
+  bool allow_credentials = 5;
+  
+  // max_age specifies the maximum age for preflight requests cache (in seconds)
+  int32 max_age = 6;
+}

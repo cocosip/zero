@@ -1,0 +1,88 @@
+# CORS Middleware Configuration Example
+# This file demonstrates how to configure CORS middleware using application config
+
+server:
+  http:
+    network: tcp
+    addr: 0.0.0.0:8080
+    timeout: 1s
+  grpc:
+    network: tcp
+    addr: 0.0.0.0:9090
+    timeout: 1s
+
+# Middleware configuration
+middleware:
+  # CORS configuration
+  cors:
+    # Allowed origins - specify exact domains or use wildcards
+    allowed_origins:
+      - "https://example.com"
+      - "https://app.example.com"
+      - "https://*.example.com"  # Subdomain wildcard
+      - "http://localhost:3000"   # Development frontend
+      - "http://localhost:8080"   # Development backend
+    
+    # Allowed HTTP methods
+    allowed_methods:
+      - "GET"
+      - "POST"
+      - "PUT"
+      - "DELETE"
+      - "OPTIONS"
+      - "PATCH"
+    
+    # Allowed request headers
+    allowed_headers:
+      - "Accept"
+      - "Content-Type"
+      - "Content-Length"
+      - "Accept-Encoding"
+      - "Authorization"
+      - "X-CSRF-Token"
+      - "X-Requested-With"
+    
+    # Headers exposed to the client
+    exposed_headers:
+      - "X-Total-Count"
+      - "X-Page-Count"
+      - "Link"
+    
+    # Allow credentials (cookies, authorization headers)
+    allow_credentials: true
+    
+    # Preflight cache duration in seconds (1 hour)
+    max_age: 3600
+
+# Alternative configurations for different environments:
+
+# Development environment - more permissive
+# middleware:
+#   cors:
+#     allowed_origins:
+#       - "*"  # Allow all origins in development
+#     allowed_methods:
+#       - "*"  # Allow all methods
+#     allowed_headers:
+#       - "*"  # Allow all headers
+#     allow_credentials: true
+#     max_age: 300  # 5 minutes
+
+# Production environment - more restrictive
+# middleware:
+#   cors:
+#     allowed_origins:
+#       - "https://app.mycompany.com"
+#       - "https://admin.mycompany.com"
+#     allowed_methods:
+#       - "GET"
+#       - "POST"
+#       - "PUT"
+#       - "DELETE"
+#     allowed_headers:
+#       - "Content-Type"
+#       - "Authorization"
+#     exposed_headers:
+#       - "X-RateLimit-Remaining"
+#     allow_credentials: true
+#     max_age: 86400  # 24 hours
