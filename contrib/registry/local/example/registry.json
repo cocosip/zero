@@ -1,0 +1,74 @@
+{
+  "services": {
+    "user-service": [
+      {
+        "id": "user-service-001",
+        "name": "user-service",
+        "version": "v1.0.0",
+        "metadata": {
+          "weight": "100",
+          "region": "us-west-1",
+          "env": "production"
+        },
+        "endpoints": [
+          "http://localhost:8080",
+          "grpc://localhost:9090"
+        ],
+        "timestamp": 1703980800
+      },
+      {
+        "id": "user-service-002",
+        "name": "user-service",
+        "version": "v1.0.0",
+        "metadata": {
+          "weight": "80",
+          "region": "us-west-2",
+          "env": "production"
+        },
+        "endpoints": [
+          "http://localhost:8081",
+          "grpc://localhost:9091"
+        ],
+        "timestamp": 1703980900
+      }
+    ],
+    "order-service": [
+      {
+        "id": "order-service-001",
+        "name": "order-service",
+        "version": "v2.1.0",
+        "metadata": {
+          "weight": "100",
+          "region": "us-east-1",
+          "env": "production",
+          "database": "mysql"
+        },
+        "endpoints": [
+          "http://localhost:8082",
+          "grpc://localhost:9092"
+        ],
+        "timestamp": 1703981000
+      }
+    ],
+    "payment-service": [
+      {
+        "id": "payment-service-001",
+        "name": "payment-service",
+        "version": "v1.5.2",
+        "metadata": {
+          "weight": "100",
+          "region": "us-central-1",
+          "env": "production",
+          "provider": "stripe"
+        },
+        "endpoints": [
+          "http://localhost:8083",
+          "grpc://localhost:9093"
+        ],
+        "timestamp": 1703981100
+      }
+    ]
+  },
+  "version": "1.0.0",
+  "updated": 1703981200
+}
