@@ -1,0 +1,135 @@
+syntax = "proto3";
+
+package kratos.api;
+
+option go_package = "github.com/cocosip/zero/contrib/registry/example/internal/conf;conf";
+
+import "google/protobuf/duration.proto";
+
+// Bootstrap represents the application configuration
+message Bootstrap {
+  Server server = 1;   // Server configuration
+  Data data = 2;       // Data layer configuration
+  Registry registry = 3; // Registry configuration
+}
+
+// Server contains server-related configuration
+message Server {
+  message HTTP {
+    string network = 1;                      // Network type (tcp, tcp4, tcp6, unix, unixpacket)
+    string addr = 2;                         // Listen address
+    google.protobuf.Duration timeout = 3;    // Request timeout
+  }
+  message GRPC {
+    string network = 1;                      // Network type (tcp, tcp4, tcp6, unix, unixpacket)
+    string addr = 2;                         // Listen address
+    google.protobuf.Duration timeout = 3;    // Request timeout
+  }
+  HTTP http = 1; // HTTP server configuration
+  GRPC grpc = 2; // gRPC server configuration
+}
+
+// Data contains data layer configuration
+message Data {
+  message Database {
+    string driver = 1; // Database driver (mysql, postgres, sqlite3)
+    string source = 2; // Database connection string
+  }
+  message Redis {
+    string network = 1;                         // Network type (tcp, unix)
+    string addr = 2;                            // Redis server address
+    string password = 3;                        // Redis password
+    int32 db = 4;                              // Redis database number
+    google.protobuf.Duration dial_timeout = 5;  // Connection timeout
+    google.protobuf.Duration read_timeout = 6;  // Read timeout
+    google.protobuf.Duration write_timeout = 7; // Write timeout
+  }
+  Database database = 1; // Database configuration
+  Redis redis = 2;       // Redis configuration
+}
+
+// Registry contains service registry configuration
+message Registry {
+  string type = 1; // Registry type (local, etcd, consul, nacos, kubernetes)
+  
+  // Local file-based registry configuration
+  LocalRegistry local = 2;
+  
+  // Etcd registry configuration
+  EtcdRegistry etcd = 3;
+  
+  // Consul registry configuration
+  ConsulRegistry consul = 4;
+  
+  // Nacos registry configuration
+  NacosRegistry nacos = 5;
+  
+  // Kubernetes registry configuration
+  KubernetesRegistry kubernetes = 6;
+}
+
+// LocalRegistry represents local file-based registry configuration
+message LocalRegistry {
+  string file_path = 1;                           // Path to the registry file
+  google.protobuf.Duration watch_interval = 2;   // File watch interval
+  bool auto_create = 3;                          // Auto create file if not exists
+}
+
+// EtcdRegistry represents etcd registry configuration
+message EtcdRegistry {
+  repeated string endpoints = 1;                  // Etcd server endpoints
+  google.protobuf.Duration dial_timeout = 2;     // Connection timeout
+  string username = 3;                           // "Username for authentication"
+  string password = 4;                           // "Password for authentication"
+  string namespace = 5;                          // "Namespace prefix for keys"
+  google.protobuf.Duration lease_ttl = 6;        // Lease TTL for service registration
+}
+
+// ConsulRegistry represents consul registry configuration
+message ConsulRegistry {
+  string address = 1;                            // Consul server address
+  string scheme = 2;                             // HTTP scheme (http, https)
+  string datacenter = 3;                         // "Consul datacenter"
+  string token = 4;                              // "Consul ACL token"
+  string namespace = 5;                          // "Consul namespace"
+  google.protobuf.Duration health_check_interval = 6; // Health check interval
+  google.protobuf.Duration health_check_timeout = 7;  // Health check timeout
+  bool health_check_deregister_critical_after = 8;    // Deregister after critical
+}
+
+// NacosRegistry represents nacos registry configuration
+message NacosRegistry {
+  repeated NacosServerConfig server_configs = 1; // Nacos server configurations
+  NacosClientConfig client_config = 2;          // Nacos client configuration
+  string group = 3;                             // "Service group"
+  string cluster = 4;                           // "Service cluster"
+}
+
+// NacosServerConfig represents nacos server configuration
+message NacosServerConfig {
+  string ip_addr = 1;      // "Nacos server IP address"
+  uint64 port = 2;         // Nacos server port
+  string context_path = 3; // "Nacos server context path"
+  string scheme = 4;       // HTTP scheme (http, https)
+}
+
+// NacosClientConfig represents nacos client configuration
+message NacosClientConfig {
+  string namespace_id = 1;                       // "Nacos namespace ID"
+  string username = 2;                           // "Username for authentication"
+  string password = 3;                           // "Password for authentication"
+  string log_level = 4;                          // "Log level (debug, info, warn, error)"
+  string log_dir = 5;                            // "Log directory path"
+  string cache_dir = 6;                          // "Cache directory path"
+  google.protobuf.Duration timeout_ms = 7;      // Request timeout
+  google.protobuf.Duration beat_interval = 8;   // Heartbeat interval
+}
+
+// KubernetesRegistry represents kubernetes registry configuration
+message KubernetesRegistry {
+  string namespace = 1;     // "Kubernetes namespace"
+  string kube_config = 2;   // "Path to kubeconfig file"
+  bool in_cluster = 3;      // Use in-cluster configuration
+  string label_selector = 4; // "Label selector for service discovery"
+  string field_selector = 5; // "Field selector for service discovery"
+}

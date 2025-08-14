@@ -1,0 +1,133 @@
+syntax = "proto3";
+package kratos.contrib.registry;
+
+option go_package = "github.com/cocosip/zero/contrib/registry/conf;conf";
+
+import "google/protobuf/duration.proto";
+
+// Registry represents the registry configuration
+// It supports multiple registry types with their specific configurations
+message Registry {
+  // Registry type to use (local, etcd, consul, nacos, kubernetes)
+  string type = 1;
+  
+  // Local registry configuration
+  LocalRegistry local = 2;
+  
+  // Etcd registry configuration
+  EtcdRegistry etcd = 3;
+  
+  // Consul registry configuration
+  ConsulRegistry consul = 4;
+  
+  // Nacos registry configuration
+  NacosRegistry nacos = 5;
+  
+  // Kubernetes registry configuration
+  KubernetesRegistry kubernetes = 6;
+}
+
+// LocalRegistry represents local file registry configuration
+message LocalRegistry {
+  // Path to the registry file
+  string file_path = 1;
+}
+
+// EtcdRegistry represents etcd registry configuration
+message EtcdRegistry {
+  // Etcd endpoints
+  repeated string endpoints = 1;
+  
+  // Connection timeout
+  google.protobuf.Duration dial_timeout = 2;
+  
+  // Username for authentication
+  string username = 3;
+  
+  // Password for authentication
+  string password = 4;
+  
+  // Etcd namespace
+  string namespace = 5;
+}
+
+// ConsulRegistry represents consul registry configuration
+message ConsulRegistry {
+  // Consul server address
+  string address = 1;
+  
+  // HTTP or HTTPS
+  string scheme = 2;
+  
+  // Consul datacenter
+  string datacenter = 3;
+  
+  // Consul ACL token
+  string token = 4;
+  
+  // Consul namespace
+  string namespace = 5;
+}
+
+// NacosRegistry represents nacos registry configuration
+message NacosRegistry {
+  // Nacos server configurations
+  repeated NacosServerConfig server_configs = 1;
+  
+  // Nacos client configuration
+  NacosClientConfig client_config = 2;
+  
+  // Service group
+  string group = 3;
+  
+  // Service cluster
+  string cluster = 4;
+}
+
+// NacosServerConfig represents nacos server configuration
+message NacosServerConfig {
+  // Server IP address
+  string ip_addr = 1;
+  
+  // Server port
+  uint64 port = 2;
+  
+  // Context path
+  string context_path = 3;
+}
+
+// NacosClientConfig represents nacos client configuration
+message NacosClientConfig {
+  // Namespace ID
+  string namespace_id = 1;
+  
+  // Username
+  string username = 2;
+  
+  // Password
+  string password = 3;
+  
+  // Log level
+  string log_level = 4;
+  
+  // Log directory
+  string log_dir = 5;
+  
+  // Cache directory
+  string cache_dir = 6;
+}
+
+// KubernetesRegistry represents kubernetes registry configuration
+message KubernetesRegistry {
+  // Kubernetes namespace
+  string namespace = 1;
+  
+  // Path to kubeconfig file
+  string kube_config = 2;
+  
+  // Whether running in cluster
+  bool in_cluster = 3;
+  
+  // Label selector for services
+  string label_selector = 4;
+}

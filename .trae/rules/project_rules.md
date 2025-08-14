@@ -5,7 +5,7 @@
 **Project Name**: Zero  
 **Repository**: github.com/cocosip/zero  
 **Description**: Extension library for Kratos v2.8.4 framework based on github.com/cocosip/utils  
-**Language**: Go 1.25  
+**Language**: Go 1.21  
 **Framework**: Kratos v2.8.4  
 
 ## Architecture Guidelines

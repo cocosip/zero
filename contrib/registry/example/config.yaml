@@ -1,0 +1,89 @@
+# Kratos Application Configuration Example
+# This configuration demonstrates how to use dynamic registry selection
+# based on deployment environment
+
+server:
+  http:
+    addr: 0.0.0.0:8000
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:9000
+    timeout: 1s
+
+data:
+  database:
+    driver: sqlite3
+    source: "file:example.db?cache=shared&mode=rwc"
+  redis:
+    addr: 127.0.0.1:6379
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+
+# Registry Configuration Examples
+# Uncomment the appropriate section based on your deployment environment
+
+# 1. Local Development Environment (Windows/Mac/Linux)
+# Use local file-based registry for development
+registry:
+  type: local
+  local:
+    file_path: "./registry.json"
+    watch_interval: "5s"
+    auto_create: true
+
+# 2. Etcd Registry (Production/Staging)
+# registry:
+#   type: etcd
+#   etcd:
+#     endpoints:
+#       - "127.0.0.1:2379"
+#       - "127.0.0.1:2380"
+#     dial_timeout: "5s"
+#     username: "etcd_user"
+#     password: "etcd_password"
+#     namespace: "/microservices"
+#     lease_ttl: "30s"
+
+# 3. Consul Registry (Production/Staging)
+# registry:
+#   type: consul
+#   consul:
+#     address: "127.0.0.1:8500"
+#     scheme: "http"
+#     datacenter: "dc1"
+#     token: "consul_token"
+#     namespace: "microservices"
+#     health_check_interval: "10s"
+#     health_check_timeout: "3s"
+#     health_check_deregister_critical_after: true
+
+# 4. Nacos Registry (Production/Staging)
+# registry:
+#   type: nacos
+#   nacos:
+#     server_configs:
+#       - ip_addr: "127.0.0.1"
+#         port: 8848
+#         context_path: "/nacos"
+#         scheme: "http"
+#     client_config:
+#       namespace_id: "public"
+#       username: "nacos"
+#       password: "nacos"
+#       log_level: "info"
+#       log_dir: "./logs/nacos"
+#       cache_dir: "./cache/nacos"
+#       timeout_ms: "5s"
+#       beat_interval: "5s"
+#     group: "DEFAULT_GROUP"
+#     cluster: "DEFAULT"
+
+# 5. Kubernetes Registry (K8s Environment)
+# registry:
+#   type: kubernetes
+#   kubernetes:
+#     namespace: "default"
+#     kube_config: ""  # Empty for in-cluster config
+#     in_cluster: true
+#     label_selector: "app=microservice"
+#     field_selector: "status.phase=Running"

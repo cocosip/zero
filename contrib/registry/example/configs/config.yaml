@@ -1,0 +1,87 @@
+# Kratos Application Configuration
+# This configuration demonstrates how to use dynamic registry configuration
+
+server:
+  http:
+    network: tcp
+    addr: 0.0.0.0:8000
+    timeout: 1s
+  grpc:
+    network: tcp
+    addr: 0.0.0.0:9000
+    timeout: 1s
+
+data:
+  database:
+    driver: sqlite3
+    source: file:ent?mode=memory&cache=shared&_fk=1
+  redis:
+    network: tcp
+    addr: 127.0.0.1:6379
+    dial_timeout: 1s
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+
+# Registry Configuration - Dynamic selection based on environment
+# Choose one of the following registry types: local, etcd, consul, nacos, kubernetes
+registry:
+  # Local file-based registry (for development)
+  type: local
+  local:
+    file_path: ./registry.json
+    watch_interval: 10s
+    auto_create: true
+
+  # Uncomment and configure for production environments:
+  
+  # Etcd registry
+  # type: etcd
+  # etcd:
+  #   endpoints:
+  #     - 127.0.0.1:2379
+  #   dial_timeout: 5s
+  #   username: ""
+  #   password: ""
+  #   namespace: "/microservices/"
+  #   lease_ttl: 30s
+
+  # Consul registry
+  # type: consul
+  # consul:
+  #   address: 127.0.0.1:8500
+  #   scheme: http
+  #   datacenter: dc1
+  #   token: ""
+  #   namespace: ""
+  #   health_check_interval: 10s
+  #   health_check_timeout: 3s
+  #   health_check_deregister_critical_after: true
+
+  # Nacos registry
+  # type: nacos
+  # nacos:
+  #   server_configs:
+  #     - ip_addr: 127.0.0.1
+  #       port: 8848
+  #       context_path: /nacos
+  #       scheme: http
+  #   client_config:
+  #     namespace_id: ""
+  #     username: nacos
+  #     password: nacos
+  #     log_level: info
+  #     log_dir: ./logs
+  #     cache_dir: ./cache
+  #     timeout_ms: 5s
+  #     beat_interval: 5s
+  #   group: DEFAULT_GROUP
+  #   cluster: DEFAULT
+
+  # Kubernetes registry
+  # type: kubernetes
+  # kubernetes:
+  #   namespace: default
+  #   kube_config: ~/.kube/config
+  #   in_cluster: false
+  #   label_selector: app=user-service
+  #   field_selector: ""

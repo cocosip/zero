@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package api.user.v1;
+
+option go_package = "github.com/cocosip/zero/contrib/registry/example/api/user/v1;v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+// UserService provides "user management functionality"
+service UserService {
+  // CreateUser creates a new user with the provided information
+  rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {
+    option (google.api.http) = {
+      post: "/v1/users"
+      body: "*"
+    };
+  }
+  
+  // GetUser retrieves user information by ID
+  rpc GetUser (GetUserRequest) returns (GetUserReply) {
+    option (google.api.http) = {
+      get: "/v1/users/{id}"
+    };
+  }
+  
+  // ListUsers returns a list of users with pagination
+  rpc ListUsers (ListUsersRequest) returns (ListUsersReply) {
+    option (google.api.http) = {
+      get: "/v1/users"
+    };
+  }
+  
+  // UpdateUser updates user information
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
+    option (google.api.http) = {
+      put: "/v1/users/{id}"
+      body: "*"
+    };
+  }
+  
+  // DeleteUser removes a user by ID
+  rpc DeleteUser (DeleteUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/users/{id}"
+    };
+  }
+}
+
+// CreateUserRequest represents the request to create a new user
+message CreateUserRequest {
+  string username = 1;  // "Username for the new user"
+  string email = 2;     // "Email address of the user"
+  string password = 3;  // "Password for the user account"
+  string full_name = 4; // "Full name of the user"
+}
+
+// CreateUserReply represents the response after creating a user
+message CreateUserReply {
+  User user = 1; // The created user information
+}
+
+// GetUserRequest represents the request to get a user by ID
+message GetUserRequest {
+  int64 id = 1; // Unique identifier of the user
+}
+
+// GetUserReply represents the response containing user information
+message GetUserReply {
+  User user = 1; // The requested user information
+}
+
+// ListUsersRequest represents the request to list users with pagination
+message ListUsersRequest {
+  int32 page = 1;      // Page number (starting from 1)
+  int32 page_size = 2; // Number of users per page
+  string search = 3;   // "Search term for filtering users"
+}
+
+// ListUsersReply represents the response containing a list of users
+message ListUsersReply {
+  repeated User users = 1; // List of users
+  int32 total = 2;         // Total number of users
+  int32 page = 3;          // Current page number
+  int32 page_size = 4;     // Number of users per page
+}
+
+// UpdateUserRequest represents the request to update user information
+message UpdateUserRequest {
+  int64 id = 1;         // Unique identifier of the user
+  string username = 2;  // "Updated username"
+  string email = 3;     // "Updated email address"
+  string full_name = 4; // "Updated full name"
+}
+
+// UpdateUserReply represents the response after updating a user
+message UpdateUserReply {
+  User user = 1; // The updated user information
+}
+
+// DeleteUserRequest represents the request to delete a user
+message DeleteUserRequest {
+  int64 id = 1; // Unique identifier of the user to delete
+}
+
+// User represents a "user entity" in the system
+message User {
+  int64 id = 1;           // Unique identifier for the user
+  string username = 2;    // "Username for login"
+  string email = 3;       // "User email address"
+  string full_name = 4;   // "Full name of the user"
+  int64 created_at = 5;   // "Creation timestamp"
+  int64 updated_at = 6;   // "Last update timestamp"
+}
